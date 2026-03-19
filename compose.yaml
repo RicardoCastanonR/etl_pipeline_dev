@@ -1,0 +1,9 @@
+services:
+  pyspark-dev:
+    build:
+      context: .
+      dockerfile: ./.devcontainer/Dockerfile
+    volumes:
+      - .:/workspace
+    container_name: pyspark-dev
+    tty: true

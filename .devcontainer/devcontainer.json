@@ -1,0 +1,17 @@
+{
+    "name": "PySpark Dev",
+    "dockerComposeFile": "../compose.yml",
+    "service": "pyspark-dev",
+    "workspaceFolder": "/workspace",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "python.defaultInterpreterPath": "/usr/local/bin/python"
+            },
+            "extensions": [
+                "ms-python.python",
+                "ms-toolsai.jupyter"
+            ]
+        }
+    }
+}
