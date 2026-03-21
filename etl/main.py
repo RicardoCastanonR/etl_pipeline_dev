@@ -1,6 +1,7 @@
 import pyspark
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import upper, col
+from pyspark.sql.functions import upper, col, sum, avg, count
+
 
 spark = SparkSession.builder \
     .appName("TestApp") \
@@ -30,3 +31,23 @@ filtered_df = df \
     .withColumn("name", upper(col("name")))
 
 filtered_df.show()
+
+# Grouping & aggregation
+sales = [
+    ("product A", "tech", 100),
+    ("product B", "tech", 200),
+    ("product C", "home", 50),
+    ("product D", "home", 10),
+    ("product E", "care", 300)
+]
+
+sales_df = spark.createDataFrame(sales, ["product", "category", "price"])
+
+sales_dst_df = sales_df.groupBy("category").agg( \
+        sum("price").alias("total"),
+        avg("price").alias("average"),
+        count("product").alias("amount")
+    )
+    
+
+sales_dst_df.show()
