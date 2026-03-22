@@ -1,6 +1,7 @@
 import pyspark
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import upper, col, sum, avg, count
+from pyspark.sql.window import Window
+from pyspark.sql.functions import upper, col, sum, avg, count, first, coalesce, lit, row_number, desc
 
 
 spark = SparkSession.builder \
@@ -16,6 +17,8 @@ spark = SparkSession.builder \
  
  spark.stop()
 """
+"""
+
 
 data = [
     (1, "Ana", 23, "US"),
@@ -48,6 +51,49 @@ sales_dst_df = sales_df.groupBy("category").agg( \
         avg("price").alias("average"),
         count("product").alias("amount")
     )
-    
 
 sales_dst_df.show()
+"""
+
+
+# Join and enrichment
+"""
+users_data = [
+    (1, "Ana"),
+    (2, "Luis"),
+    (3, "Maria")
+]
+
+orders_data = [
+    (101, 1, 500),
+    (102, 1, 300),
+    (103, 2, 200)
+]
+
+users_df = spark.createDataFrame(users_data, ["user_id", "name"])
+orders_df = spark.createDataFrame(orders_data, ["order_id", "user_id", "price"])
+
+sales_2_df = users_df.join(orders_df, on="user_id", how="left") \
+    .groupBy("user_id") \
+    .agg(
+        first("name").alias("name"), 
+        coalesce(sum("price"), lit(0)).alias("total_spent")
+    )
+sales_2_df.show()
+"""
+
+# Window functions
+employees_data = [
+    (1, "Ana", "IT", 5000),
+    (2, "Luis", "IT", 7000),
+    (3, "Maria", "HR", 4000),
+    (4, "Pedro", "IT", 7000),
+    (5, "Juan", "HR", 4500)
+]
+
+employees_df = spark.createDataFrame(employees_data, ["id", "name", "department", "salary"])
+rank_df = employees_df.withColumn(
+    "",
+    row_number().over(Window.partitionBy("department").orderBy(col("salary").desc()))
+)
+rank_df.show()
