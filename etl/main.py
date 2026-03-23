@@ -1,14 +1,27 @@
 import pyspark
 from pyspark.sql import SparkSession
+import importlib
+"""
 from pyspark.sql.window import Window
 from pyspark.sql.functions import upper, col, sum, avg, count, first, coalesce, lit, row_number, desc, last
+"""
 
 
-spark = SparkSession.builder \
-    .appName("TestApp") \
-    .config("spark.jars", "/opt/spark/") \
-    .getOrCreate()
 
+def main():
+    # args processing
+
+    # etl selection
+
+
+    spark = SparkSession.builder \
+        .appName("TestApp") \
+        .master("local[*]") \
+        .config("spark.jars", "/opt/spark/") \
+        .getOrCreate()
+    
+
+# Comented code will be passed to their own files in future
 """
  data = [("Ricardo", 27), ("Ana", 25)]
  df = spark.createDataFrame(data, ["name", "age"])
@@ -84,25 +97,8 @@ sales_2_df = users_df.join(orders_df, on="user_id", how="left") \
 sales_2_df.show()
 """
 
-# Window functions
-"""
-employees_data = [
-    (1, "Ana", "IT", 5000),
-    (2, "Luis", "IT", 7000),
-    (3, "Maria", "HR", 4000),
-    (4, "Pedro", "IT", 7000),
-    (5, "Juan", "HR", 4500)
-]
-
-employees_df = spark.createDataFrame(employees_data, ["id", "name", "department", "salary"])
-rank_df = employees_df.withColumn(
-    "",
-    row_number().over(Window.partitionBy("department").orderBy(col("salary").desc()))
-)
-rank_df.show()
-"""
-
 # Complex transformation
+"""
 user_login_data = [
     (1, "login",    "2026-01-01 10:00"),
     (1, "buy",      "2026-01-01 10:05"),
@@ -120,3 +116,4 @@ session_data_df = user_login_df \
         count("event")
     )
 session_data_df.show()
+"""
