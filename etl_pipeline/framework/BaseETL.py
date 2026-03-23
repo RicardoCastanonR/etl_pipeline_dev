@@ -9,6 +9,7 @@ class BaseETL(ABC):
     
     def config_parser(self):
         print("Check correctness of config entries")
+        # TODO: check if all the config entries are correc or accepted
     
     @abstractmethod
     def run(self):
