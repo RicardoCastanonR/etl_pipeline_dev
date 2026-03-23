@@ -1,7 +1,7 @@
 import pyspark
 from pyspark.sql import SparkSession
 from pyspark.sql.window import Window
-from pyspark.sql.functions import upper, col, sum, avg, count, first, coalesce, lit, row_number, desc
+from pyspark.sql.functions import upper, col, sum, avg, count, first, coalesce, lit, row_number, desc, last
 
 
 spark = SparkSession.builder \
@@ -34,8 +34,10 @@ filtered_df = df \
     .withColumn("name", upper(col("name")))
 
 filtered_df.show()
+"""
 
 # Grouping & aggregation
+"""
 sales = [
     ("product A", "tech", 100),
     ("product B", "tech", 200),
@@ -83,6 +85,7 @@ sales_2_df.show()
 """
 
 # Window functions
+"""
 employees_data = [
     (1, "Ana", "IT", 5000),
     (2, "Luis", "IT", 7000),
@@ -97,3 +100,23 @@ rank_df = employees_df.withColumn(
     row_number().over(Window.partitionBy("department").orderBy(col("salary").desc()))
 )
 rank_df.show()
+"""
+
+# Complex transformation
+user_login_data = [
+    (1, "login",    "2026-01-01 10:00"),
+    (1, "buy",      "2026-01-01 10:05"),
+    (2, "login",    "2026-01-01 11:00"),
+    (1, "logout",   "2026-01-01 10:10"),
+    (2, "buy",      "2026-01-01 11:10")
+]
+
+user_login_df = spark.createDataFrame(user_login_data, ["user_id", "event", "timestamp"])
+session_data_df = user_login_df \
+    .groupBy("user_id") \
+    .agg(
+        first("event").alias("first_event"),
+        last("event").alias("last_event"),
+        count("event")
+    )
+session_data_df.show()
