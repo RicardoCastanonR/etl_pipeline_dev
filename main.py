@@ -1,6 +1,7 @@
 import pyspark
 from pyspark.sql import SparkSession
 import importlib
+from etl.window_etl import windowETL
 """
 from pyspark.sql.window import Window
 from pyspark.sql.functions import upper, col, sum, avg, count, first, coalesce, lit, row_number, desc, last
@@ -19,8 +20,11 @@ def main():
         .master("local[*]") \
         .config("spark.jars", "/opt/spark/") \
         .getOrCreate()
+    config = {"key": "value"}
+    etl = windowETL(config)
     
-
+if __name__ == "__main__":
+    main()
 # Comented code will be passed to their own files in future
 """
  data = [("Ricardo", 27), ("Ana", 25)]
